@@ -35,4 +35,15 @@ fn main() {
     // 8. Test is_valid (Static/Associated method)
     let check_valid = Ipv4::is_valid("999.999.999.999");
     println!("Is '999.999.999.999' valid?: {}", check_valid);
+
+
+    println!("Ip to arpa is: {}", ip.to_arpa());
+
+    // Get the next IP
+    let next_ip = ip.next(1);
+    println!("Next:     {}", next_ip.get_address()); // 192.168.2.0
+
+    // Get an IP 10 steps back
+    let prev_ip = ip.previous(10);
+    println!("Prev 10:  {}", prev_ip.get_address()); // 192.168.1.245
 }

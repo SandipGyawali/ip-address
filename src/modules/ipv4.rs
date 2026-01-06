@@ -84,4 +84,46 @@ impl Ipv4 {
   pub fn to_bytes(&self) -> [u8; 4] {
     self.address.to_be_bytes()
   }
+
+  pub fn to_arpa(&self) -> String {
+    let octets = self.to_bytes();
+    format!(
+      "{}.{}.{}.{}.in-addr.arpa",
+      octets[3], octets[2], octets[1], octets[0]
+    )
+  }
+
+  pub fn next(&self, count: u32) -> Self {
+    let new_val = self.address.wrapping_add(count);
+    Self { address: new_val }
+  }
+
+  pub fn previous(&self, count: u32) -> Self {
+    let new_val = self.address.wrapping_sub(count);
+    Self { address: new_val }
+  }
+
+  pub fn is_unspecified(&self) -> bool {
+    self.address == 0
+  }
+
+  /**
+   * checks if the address is the limited broadcast address
+   * let ip = Ipv4::new("255.255.255.255");
+   * ip.is_broadcast() -> return true if broadcast otherwise false
+   */
+  pub fn is_broadcast(&self) -> bool {
+    self.address == 0xFFFFFFFF
+  } 
+
+  pub fn is_loopback(&self) -> bool {
+    (self.address >> 24) == 127
+  } 
+
+  pub fn is_global_unicast(&self) -> bool {
+    !self.is_unspecified()
+      && !self.is_private()
+      && !self.is_broadcast()
+      && !self.is_loopback() 
+  }
 }
